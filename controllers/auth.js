@@ -28,13 +28,11 @@ const crearUsuario = async (req, res = response) => {
     res.status(201).json({
       ok: true,
       msg: "Registro Exitoso!",
-      // uid: usuario.id,
-      // name: usuario.name,
-      usuario,
+      uid: usuario.id,
+      name: usuario.name,
       token,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       ok: false,
       msg: "Por favor hable con el administrador",
@@ -90,6 +88,8 @@ const revalidarToken = async (req, res = response) => {
   res.json({
     ok: true,
     msg: "Token Renewed!",
+    uid,
+    name,
     token,
   });
 };
