@@ -1,8 +1,8 @@
 const { response } = require("express");
-const Evento = require("../models/EventModel");
+const eventModel = require("../models/event.model");
 
 const obtenerEventos = async (req, res = response) => {
-  const eventos = await Evento.find().populate("user", "name");
+  const eventos = await eventModel.find().populate("user", "name");
 
   res.status(200).json({
     ok: true,
@@ -12,7 +12,7 @@ const obtenerEventos = async (req, res = response) => {
 };
 
 const crearEvento = async (req, res = response) => {
-  const evento = new Evento(req.body);
+  const evento = new eventModel(req.body);
 
   try {
     evento.user = req.uid;
@@ -37,17 +37,17 @@ const actualizarEvento = async (req, res = response) => {
   const uid = req.uid;
 
   try {
-    const evento = await Evento.findById(eventoId);
+    const evento = await eventModel.findById(eventoId);
 
     if (!evento) {
-      res.status(404).json({
+      return res.status(404).json({
         ok: false,
         msg: "El evento no existe!",
       });
     }
 
     if (evento.user.toString() !== uid) {
-      res.status(401).json({
+      return res.status(401).json({
         ok: false,
         msg: "No tiene autorizacion!",
       });
@@ -58,7 +58,7 @@ const actualizarEvento = async (req, res = response) => {
       user: uid,
     };
 
-    const eventoActualizado = await Evento.findByIdAndUpdate(
+    const eventoActualizado = await eventModel.findByIdAndUpdate(
       eventoId,
       nuevoEvento,
       { new: true }
@@ -67,7 +67,7 @@ const actualizarEvento = async (req, res = response) => {
     res.status(200).json({
       ok: true,
       msg: "Evento actualizado!",
-      evento: eventoActualizado,
+      eventoActualizado,
     });
   } catch (error) {
     console.log(error);
@@ -83,23 +83,23 @@ const eliminarEvento = async (req, res = response) => {
   const uid = req.uid;
 
   try {
-    const evento = await Evento.findById(eventoId);
+    const evento = await eventModel.findById(eventoId);
 
     if (!evento) {
-      res.status(404).json({
+      return res.status(404).json({
         ok: false,
         msg: "El evento no existe!",
       });
     }
 
     if (evento.user.toString() !== uid) {
-      res.status(401).json({
+      return res.status(401).json({
         ok: false,
         msg: "No tiene autorizacion!",
       });
     }
 
-    await Evento.findByIdAndDelete(eventoId);
+    await eventModel.findByIdAndDelete(eventoId);
 
     res.status(200).json({
       ok: true,
