@@ -14,22 +14,8 @@ app.use(express.json());
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/events", require("./routes/events.routes"));
 
-// app.get("*", (req, res) => {
-//   res.send(__dirname + "/public/index.html");
-// });
-
-app.get("/", (req, res) => {
-  const htmlResponse = `
-    <html>
-      <head>
-        <title>NodeJs y Express</title>
-      </head>
-      <body>
-        <h1>Calendar Backend</h1>
-      </body>
-    </html>
-  `;
-  res.send(htmlResponse);
+app.get("*", (req, res) => {
+  res.send(__dirname + "/public/index.html");
 });
 
 app.listen(port, () => {
